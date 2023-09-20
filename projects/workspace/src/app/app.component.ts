@@ -39,14 +39,14 @@ export class AppComponent implements AfterViewInit {
   normalStepTemplate: TemplateRef<any>;
 
   sampleJson =
-    '{"root":{"id":"s1674421266194","type":"log","data":{"name":"Log","icon":{"name":"log-icon","color":"blue"},"config":{"message":null,"severity":null}},"children":[{"id":"s1674421267975","type":"log","data":{"name":"Log","icon":{"name":"log-icon","color":"blue"},"config":{"message":null,"severity":null}},"children":[{"id":"s1674421269738","type":"log","data":{"name":"Log","icon":{"name":"log-icon","color":"blue"},"config":{"message":null,"severity":null}},"children":[]}]},{"id":"s1674421268826","type":"log","data":{"name":"Log","icon":{"name":"log-icon","color":"blue"},"config":{"message":null,"severity":null}},"children":[]}]},"connectors":[{"startStepId":"s1674421269738","endStepId":"s1674421268826"}]}';
+    '{"root":{"id":"s1674421266194","type":"root","data":{"name":"Root","icon":{"name":"log-icon","color":"blue"},"config":{"message":null,"severity":null}},"children":[{"id":"s1674421267975","type":"process","data":{"name":"Log","icon":{"name":"log-icon","color":"blue"},"config":{"message":null,"severity":null}},"children":[{"id":"s1674421269738","type":"step","data":{"name":"Log","icon":{"name":"log-icon","color":"blue"},"config":{"message":null,"severity":null}},"children":[]}]},{"id":"s1674421268826","type":"step","data":{"name":"Log","icon":{"name":"log-icon","color":"blue"},"config":{"message":null,"severity":null}},"children":[]}]},"connectors":[{"startStepId":"s1674421269738","endStepId":"s1674421268826"}]}';
 
   items = [
     {
-      name: 'Logger',
-      type: 'log',
+      name: 'Process',
+      type: 'process',
       data: {
-        name: 'Log',
+        name: 'Process',
         icon: { name: 'log-icon', color: 'blue' },
         config: {
           message: null,
@@ -54,34 +54,15 @@ export class AppComponent implements AfterViewInit {
         },
       },
     },
-  ];
-
-  customOps = [
     {
-      paletteName: 'Router',
-      step: {
-        template: CustomStepComponent,
-        type: 'router',
-        data: {
-          name: 'Routing Block',
-        },
-      },
-    },
-    {
-      paletteName: 'Form Step',
-      step: {
-        template: FormStepComponent,
-        type: 'form-step',
-        data: '123',
-      },
-    },
-    {
-      paletteName: 'Nested Flow',
-      step: {
-        template: NestedFlowComponent,
-        type: 'nested-flow',
-        data: {
-          name: 'Nested Flow',
+      name: 'Steo',
+      type: 'step',
+      data: {
+        name: 'Step',
+        icon: { name: 'log-icon', color: 'blue' },
+        config: {
+          message: null,
+          severity: null,
         },
       },
     },
@@ -104,7 +85,9 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     // this.stepRegistry.registerStep('rest-get', this.normalStepTemplate);
-    this.stepRegistry.registerStep('log', this.normalStepTemplate);
+    this.stepRegistry.registerStep('root', this.normalStepTemplate);
+    this.stepRegistry.registerStep('process', this.normalStepTemplate);
+    this.stepRegistry.registerStep('step', this.normalStepTemplate);
     this.stepRegistry.registerStep('router', CustomStepComponent);
     this.stepRegistry.registerStep('nested-flow', NestedFlowComponent);
     this.stepRegistry.registerStep('form-step', FormStepComponent);

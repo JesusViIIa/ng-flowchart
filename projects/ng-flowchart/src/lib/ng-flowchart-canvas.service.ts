@@ -278,6 +278,7 @@ export class NgFlowchartCanvasService {
   }
 
   addToCanvas(componentRef: ComponentRef<NgFlowchartStepComponent>) {
+    console.log('addToCanvas', componentRef);
     this.renderer.renderNonRoot(componentRef);
   }
 
@@ -366,6 +367,56 @@ export class NgFlowchartCanvasService {
       added: false,
       prettyRender: false,
     };
+    // Estoy modificando esta libreria para realizar ciertas validaciones
+    // tengo 3 tipos de step:
+    /* 
+     1) root: es el primer step que se crea, no tiene padre
+     2) process: es un step que solo puede ser hijo de un root y no puede tener hijos tipo process, solo puede tener hijos tipo step
+     3) step: step puede ser hijo de process o de otro step, solo puede tener hijos tipo step
+     
+
+     es importante que solo se pueda crear un root, y que solo se pueda crear un process como hijo de un root
+      */
+
+    console.log('step', step);
+    console.log('dropTarget', dropTarget);
+
+    // si el step es de tipo process, solo puede ser hijo de un root
+    if (step.type === 'process') {
+      // validar que el dropTarget sea un root o un process con posicion left o right
+      if (
+        (dropTarget.step.type == 'process' && dropTarget.position == 'ABOVE') ||
+        dropTarget.position == 'BELOW'
+      ) {
+        console.warn('process solo puede ser hijo de un root');
+        return response;
+      }
+      // validar que si el dropTarget es root, no tenga hijos
+      if (dropTarget.step.type === 'root') {
+        if (dropTarget.step.children.length > 0) {
+          console.warn('root no puede tener mas hijos');
+          return response;
+        }
+      }
+    }
+
+    if (step.type === 'step') {
+      // validar que el dropTarget sea un step o un process, process con posicion Below o step con posicion left o right
+      if (dropTarget.step.type == 'root') {
+        console.warn('step no puede ser hijo de un root');
+        return response;
+      }
+      if (dropTarget.step.type == 'process') {
+        if (
+          dropTarget.position == 'ABOVE' ||
+          dropTarget.position == 'LEFT' ||
+          dropTarget.position == 'RIGHT'
+        ) {
+          console.warn('step no puede ser hijo de un process');
+          return response;
+        }
+      }
+    }
 
     switch (dropTarget.position) {
       case 'ABOVE':
@@ -385,6 +436,7 @@ export class NgFlowchartCanvasService {
     }
 
     if (!isMove && response.added) {
+      console.log('agregando step');
       this.flow.addStep(step);
     }
     return response;
